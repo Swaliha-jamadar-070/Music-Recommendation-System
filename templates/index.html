@@ -237,7 +237,6 @@ footer{
     color:#aaa;
 }
 </style>
-
 <script>
 async function searchSongs(){
     let query = document.getElementById("songInput").value;
@@ -272,10 +271,25 @@ function likeSong(song){
 }
 
 function playSong(preview, name, artist){
+
+    console.log("🎵 Playing:", name);
+
+    // 🔥 SEND DATA TO FLASK
+    fetch('/track_play',{
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify({ song: name })
+    })
+    .then(response => response.json())
+    .then(data => console.log("✅ Saved:", data))
+    .catch(error => console.log("❌ Error:", error));
+
     let player = document.getElementById("player");
     let now = document.getElementById("nowPlaying");
 
-    if(preview){
+    if(preview && preview !== ""){
         player.src = preview;
         player.play();
         now.innerText = "🎶 Now Playing: " + name;
@@ -284,6 +298,7 @@ function playSong(preview, name, artist){
     }
 }
 </script>
+
 
 </head>
 
